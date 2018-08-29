@@ -1,0 +1,96 @@
+// see: http://central.sonatype.org/pages/gradle.html
+
+apply plugin: "signing"
+
+def isReleaseBuild() {
+    return !version.contains("-SNAPSHOT")
+}
+
+def getReleaseRepositoryUrl() {
+    return hasProperty('MVN_RELEASE_REPO') ? MVN_RELEASE_REPO
+            : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+}
+
+def getSnapshotRepositoryUrl() {
+    return hasProperty("MVN_SNAPSHOT_REPO") ? MVN_SNAPSHOT_REPO
+            : "https://oss.sonatype.org/content/repositories/snapshots/"
+}
+
+def getRepositoryUsername() {
+    return hasProperty('MVN_USERNAME') ? MVN_USERNAME : ""
+}
+
+def getRepositoryPassword() {
+    return hasProperty('MVN_PASSWORD') ? MVN_PASSWORD : ""
+}
+
+def getProxyHost() {
+    return hasProperty('MVN_PROXY_HOST') ? MVN_PROXY_HOST : null
+}
+
+def getProxyPort() {
+    return hasProperty('MVN_PROXY_PORT') ? MVN_PROXY_PORT.toInteger() : 0
+}
+
+afterEvaluate { project ->
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                def proxyHost = getProxyHost()
+                def proxyPort = getProxyPort()
+
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+                repository(url: getReleaseRepositoryUrl()) {
+                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+                    if (proxyHost != null) {
+                        proxy(host: proxyHost, port: proxyPort, type: "http")
+                    }
+                }
+                snapshotRepository(url: getSnapshotRepositoryUrl()) {
+                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+                    if (proxyHost != null) {
+                        proxy(host: proxyHost, port: proxyPort, type: "http")
+                    }
+                }
+            }
+        }
+    }
+
+    [install.repositories.mavenInstaller, uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
+        pom.project {
+            name "${ext.name}"
+            description "NEC Mobile Backend Platform Java/Android SDK"
+            url "https://github.com/nec-baas/baas-client-android"
+
+            scm {
+                url "https://github.com/nec-baas/baas-client-android"
+                connection "scm:git:https://github.com/nec-baas/baas-client-android.git"
+                developerConnection "scm:git:https://github.com/nec-baas/baas-client-android.git"
+            }
+
+            licenses {
+                license {
+                    name "MIT License"
+                    url "https://opensource.org/licenses/MIT"
+                    distribution "repo"
+                    comments "Copyright (c) 2013-2018, NEC Corporation."
+                }
+            }
+
+            developers {
+                developer {
+                    id "nec"
+                    organization = "NEC Corporation"
+                    organizationUrl "http://jpn.nec.com"
+                }
+            }
+        }
+    }
+
+    signing {
+        required {
+            isReleaseBuild() && gradle.taskGraph.hasTask(":core:signArchives")
+        }
+        sign configurations.archives
+    }
+}

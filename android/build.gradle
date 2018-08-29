@@ -1,0 +1,247 @@
+apply plugin: 'com.android.library'
+
+apply from: '../lombok.gradle'
+
+// for AAR / artifactId
+archivesBaseName = "baas-client-android"
+
+def aggregateJar = hasProperty("aggregateJar") && aggregateJar == "true"
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        testApplicationId "com.nec.baas.android.sdk.test"
+        
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+
+        // multidex を使用する場合は以下を有効にする
+        multiDexEnabled true
+
+        // JUnit4
+        testInstrumentationRunner 'com.nec.baas.util.NebulaTestRunner'
+
+        // 自動テスト実行時のオプション (Gradle Plugin for Android 1.3 以降が必要)。
+        // 指定可能なオプションは以下 URL の "adb shell am instrument” の -e オプション指定を参照。
+        // http://developer.android.com/reference/android/test/InstrumentationTestRunner.html
+        //testInstrumentationRunnerArgument "class", "com.nec.baas.suites.CoverageTests"
+        //testInstrumentationRunnerArgument "size", "medium"
+
+        manifestPlaceholders = [
+                testAppId: defaultConfig.testApplicationId,
+                versionCode: rootProject.ext.versionCode,
+                versionName: rootProject.ext.versionName
+        ]
+    }
+
+    dexOptions {
+        // 最大ヒープサイズを設定
+        if (System.getProperty("os.arch") == "x86" &&
+                System.getProperty("os.name").startsWith("Windows")) {
+            // Window 32bit 環境では 1G 程度が限界
+            javaMaxHeapSize "1g"
+        } else {
+            javaMaxHeapSize "2g"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    // カバレッジ関連: カバレッジを実行するときは testCoverageEnabled を true
+    // に設定する。実行は gradle createDebugAndroidTestCoverageReport で。
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+    }
+
+    sourceSets {
+        main {
+            java {
+                if (aggregateJar) {
+                    // core 側ソースを直接ビルド・リンクする (jarは使用しない)
+                    srcDirs = ['src/main/java', '../core/src/main/java']
+                    exclude '**/package-info.java'
+                    exclude '**/generic/**'
+                    exclude '**/NbGenericHttpRequestFactory.java' // httpclient 依存するため除外
+                }
+            }
+
+            // ネイティブライブラリは libs 以下に設置する (armeabi/, x86/)
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    /*jacoco {
+        version "0.7.5.201505241946"
+    }*/
+
+    lintOptions {
+        abortOnError false
+    }
+
+    // Ignore file duplication error for some jars
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'LICENSE.txt'
+        exclude 'LICENSE'
+        exclude 'asm-license.txt'
+        pickFirst 'protobuf.meta'
+    }
+}
+
+dependencies {
+    if (aggregateJar) {
+        // jackson
+        implementation "com.fasterxml.jackson.core:jackson-core"
+
+        // okhttp3
+        implementation "com.squareup.okhttp3:okhttp"
+
+        // for SSE Push Client
+        implementation "com.nec.baas.ssepush:ssepush-client:${rootProject.ext.ssepushClientVersion}"
+
+        compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    } else {
+        api (project(':core')) {
+            //exclude group: 'org.projectlombok', module: 'lombok' // core 側のlombok plugin バージョン不整合対応のため
+        }
+    }
+
+    // apache commons-codec
+    implementation 'commons-codec:commons-codec:1.10'
+
+    // SQLCipher / CipherDB
+    implementation 'net.zetetic:android-database-sqlcipher:3.5.6@aar'
+    //implementation (name: 'sde_commons-cipherdb-1.0.5-release', ext:'aar')
+
+    // Play services (for GCM)
+    implementation "com.google.android.gms:play-services-gcm:${playServicesGcmVersion}"
+    // Firebase (for FCM)
+    implementation "com.google.firebase:firebase-messaging:${firebaseMessagingVersion}"
+
+    // multidex を使用する場合は以下を有効にする
+    implementation 'com.android.support:multidex:1.0.3'
+
+    // Annotation Processors
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    androidTestAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    // core test jar 読み込み。
+    // androidTestCompile files で jar をロードする。
+    // Note 1: 先に core 側の testJar を実行させるため、preBuild.dependsOn で順序指定が必要。
+    // Note 2: fileTree 指定だと初回ビルドが失敗するため、直接ファイル指定する。
+    // Note 3: project(path:..., configuration:...) はうまく動作しない。
+    androidTestImplementation files("../core/build/libs/baas-client-core-${project.version}-test.jar")
+    //androidTestImplementation fileTree(dir: '../core/build/libs', include: '*-test.jar')
+    //androidTestImplementation project(path: ':core', configuration: 'testArtifacts)
+
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+    androidTestImplementation "org.mockito:mockito-android:${mockitoVersion}"
+
+    // JUnit4
+    // see. http://dev.classmethod.jp/smartphone/android/android-studio-junit4-01/
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test:rules:1.0.1'
+    androidTestImplementation ('com.android.support.test.espresso:espresso-core:3.0.1') {
+        exclude group: 'javax.inject', module: 'javax.inject'
+    }
+    androidTestImplementation "org.assertj:assertj-core:${assertjVersion}"
+
+    // バージョン衝突回避のため強制的に明示 (com.android.suppor.test:runner が依存)
+    implementation "com.android.support:support-annotations:${supportLibsVersion}"
+    androidTestImplementation "com.android.support:support-annotations:${supportLibsVersion}"
+}
+
+// ビルド前に、core 側の testJar を強制実行し、test-jar を生成する
+preBuild.dependsOn ':core:testJar'
+
+// JAR 生成 (デフォルトでは AAR しか生成しないため)
+task jar(type: Jar, dependsOn: assemble) {
+    //from android.sourceSets.main.java
+    from 'build/intermediates/classes/release'
+    exclude '**/R$*.class'
+    exclude '**/R.class'
+}
+
+jar {
+    baseName = archivesBaseName
+}
+
+// Javadoc jar 生成用タスク
+task javadoc(type: Javadoc) {
+    source = ['src/main/java']
+    options {
+        footer = "NEC Group Internal Use Only"
+        encoding 'UTF-8'
+        docEncoding 'UTF-8'
+        charSet 'UTF-8'
+        showFromPublic() // show only public methods.
+    }
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    baseName = jar.baseName
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar) {
+    baseName = jar.baseName
+    classifier = 'sources'
+    from "src/main"
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+// Test fail がある状態で coverage テストを
+// 行う場合は、-PignoreTestFailures オプションを付けること。
+// (テストエラーを無視する)
+if (project.hasProperty("ignoreTestFailures")) {
+    project.gradle.taskGraph.whenReady {
+        connectedDebugAndroidTest {
+            ignoreFailures = true
+        }
+    }
+}
+
+// installDebugAndroidTest 後にpermissionを許可する
+// テスト実行する端末が Android6.0 以降の場合に必要
+task grantPermissions(dependsOn: 'installDebugAndroidTest') {
+
+    ext.grantPermission = { permission ->
+        exec {
+            def adb = android.adbExecutable.toString()
+            commandLine "${adb} shell pm grant ${android.defaultConfig.testApplicationId} ${permission}".split(' ')
+        }
+    }
+
+    doLast {
+        grantPermission('android.permission.READ_EXTERNAL_STORAGE')
+        // grantPermission('android.permission.XXXXX')
+    }
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith('connectedDebugAndroidTest')) {
+        task.dependsOn grantPermissions
+    }
+}
+
+// maven publish
+ext.name = "com.nec.baas:baas-client-android"
+apply plugin: 'com.github.dcendents.android-maven'
+apply from: '../maven-publish.gradle'

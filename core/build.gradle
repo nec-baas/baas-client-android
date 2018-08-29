@@ -1,0 +1,121 @@
+apply plugin: 'java'
+apply plugin: 'java-library'
+apply plugin: 'idea'
+apply plugin: 'jacoco'
+apply from: '../lombok.gradle'
+
+// as artifactId
+archivesBaseName = "baas-client-core"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    // jackson
+    api "com.fasterxml.jackson.core:jackson-core"
+
+    // okhttp3
+    api "com.squareup.okhttp3:okhttp"
+
+    // apache commons-codec
+    api 'commons-codec:commons-codec:1.10'
+
+    // SSE Push Client
+    implementation "com.nec.baas.ssepush:ssepush-client:${rootProject.ext.ssepushClientVersion}"
+
+    //provided "org.projectlombok:lombok:${lombokVersion}"
+
+    //testImplementation 'commons-lang:commons-lang:2.3'
+    testImplementation 'org.xerial:sqlite-jdbc:3.8.7'
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation "org.assertj:assertj-core:${rootProject.ext.assertjVersion}"
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+    testImplementation "com.google.guava:guava:${guavaVersion}-jre"
+}
+
+sourceSets {
+    main {
+        // for lombok
+        compileClasspath += configurations.provided
+    }
+    test {
+        // for lombok
+        compileClasspath += configurations.provided
+    }
+}
+
+// IntelliJ / Android Studio
+idea.module {
+    scopes.PROVIDED.plus += [configurations.provided]
+}
+
+test {
+    include '**/*Test.class'
+    //exclude '**/*IT.class'
+}
+
+// Integration Test
+task integrationTest(type: Test, dependsOn: compileTestJava) {
+    include '**/*IT.class'
+    useJUnit {
+        excludeCategories('com.nec.baas.SlowTests')
+        excludeCategories('com.nec.baas.UnstableTests')
+    }
+}
+
+jar {
+    baseName = archivesBaseName
+}
+
+javadoc {
+    options {
+        footer = "NEC Group Internal Use Only"
+        encoding 'UTF-8'
+        docEncoding 'UTF-8'
+        charSet 'UTF-8'
+        showFromPublic() // show only public methods.
+    }
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    baseName = jar.baseName
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    baseName = jar.baseName
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+// テスト用 Jar 生成
+task testJar(type: Jar, dependsOn: testClasses) {
+    classifier = 'test'
+    baseName = "baas-client-core"
+    from sourceSets.test.output
+
+    // テストクラスは除外
+    exclude "**/*Test.class"
+    exclude "**/*IT.class"
+    exclude "**/*ST.class"
+}
+
+configurations {
+    // test jar 生成用コンフィグレーション
+    testArtifact
+}
+
+// アーティファクト
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+
+    testArtifact testJar  // testArtifacts configuration と testJar task を指定
+}
+
+// maven publish
+ext.name = "com.nec.baas:baas-client-core"
+apply plugin: 'maven'
+apply from: '../maven-publish.gradle'

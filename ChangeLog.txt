@@ -1,0 +1,549 @@
+2018-03-22: v7.0.0
+
+    * バージョン変更のみ
+
+2018-03-09: v7.0.0 rc1
+
+    * 機能追加・変更
+      - [8187] オブジェクトストレージ Aggregation API 追加
+      - ライブラリファイル名変更 (NebulaClient*.jar -> baas-client-*.jar)
+      - SsePushClient ライブラリ名称変更 (SsePushClient -> ssepush-client)
+      - sde_commons-cipherdb ライブラリ依存削除、android sdk に直接取り込み
+    
+    * 以下 OSS を更新
+      - jackson-core: 2.9.2 -> 2.9.4
+      - okhttp3: 3.8.1 -> 3.10.0
+
+2017-12-15: v7.0.0 beta1
+
+    * 機能追加
+      - [7579] API Gateway 呼び出し API 追加
+
+    * SsePushClient ライブラリを v5.0.2 -> v7.0.0 に更新
+
+    * 以下 OSS を更新
+      - jackson: 2.9.0 -> 2.9.2
+      - firebase: 11.0.4 -> 11.4.2
+
+2017-10-06: v6.5.0
+
+    * v6.5.0-rc1 から変更なし。バージョン変更のみ。
+
+2017-09-22: v6.5.0-rc1
+
+    * 以下の修正・改善を実施
+      - #6865: URLパスパラメータの encode 処理を改善
+
+2017-08-31: v6.5.0-beta2
+
+    * 機能追加
+      - #5983: [Android/Java SDK] ファイルにユーザ定義メタ情報を付与できるようにする
+
+    * 以下の修正・改善を実施
+      - #5986: 同じメタデータを使用してファイルをリネームしたときに API URL がおかしくなることがある
+
+    * 以下 OSS を更新
+      - jackson-core: 2.7.1 -> 2.9.0
+      - okhttp: 3.8.0 -> 3.8.1
+
+2017-07-12: v6.2.0 rc1
+
+    * 機能追加
+      - #5294: ワンタイムトークン認証対応追加(OIDC/SAML認証対応)
+      - #5296: クライアント証明書認証対応
+
+    * 以下の修正・改善を実施
+      - #5351: Android側ライブラリ(JAR)変更、coreライブラリを含まない
+      - #5376: List で結果を返す一部のコールバック・APIを変更する
+      - #5376: NbObject.query()/NbUser.query() メソッド分割
+      - #5441: ステータスコード 200番台はすべて成功として扱う(従来は200のみ)
+      
+2017-05-29: v6.2.0 beta1
+
+    * 以下の修正・改善を実施
+      - #5305: Apache HttpClient 削除、OkHttp3 に移行
+
+2016-03-02: v6.0.0
+
+    * 以下の修正・改善を実施
+      - #4242: FCM(Firebase Cloud Messaging)対応追加
+      - #4968: SSE Push 切断再接続が 401 エラーとなった際に、接続が自動リカバリされない
+
+2017-02-21: v5.0.1
+
+    * 以下の不具合を修正
+      - #4782: SSE Push において、NW経路が切断されてもクライアント側で切断検知できない
+      - #4883: SSE Push において、ハートビート喪失後の再接続が実行されない
+
+2017-01-31: v4.0.1
+
+    * 以下の不具合を修正
+      - #4782: SSE Push において、NW経路が切断されてもクライアント側で切断検知できない
+          
+    * 以下の不具合を修正 (v5.0.0 backport)
+      - #3834: マルチテナントモード無効化時に NbService の二重生成時例外がスローされない
+      - #3886: ExecutorServiceが生成する thread が daemon thread になっていない
+
+    * 以下の修正・改善を実施 (v5.0.0 backport)
+      - #3675: ログアウト失敗時でもセッショントークンは破棄する
+
+2016-11-02: v5.0.0
+
+    * SsePushClient ライブラリを v5.0.0 に更新
+
+    * 以下の修正・改善を実施
+      - [3906] SSE Push サーバ接続失敗時のログを追加
+
+2016-10-04: v5.0.0 (rc1)
+
+    * 以下の不具合を修正
+      - #3834: マルチテナントモード無効化時に NbService の二重生成時例外がスローされない
+      - #3886: ExecutorServiceが生成する thread が daemon thread になっていない
+
+    * 以下の修正・改善を実施
+      - #3790: ユーザ検索API改善(skip/limit指定追加)
+      - #3904: ServiceBuilder を fluent API に変更
+
+2016-06-23: v5.0.0 (beta1)
+
+    * 以下の修正・改善を実施
+      - #3675: ログアウト失敗時でもセッショントークンは破棄する
+      - #3437: User の所属グループ情報取得API追加
+
+2016-03-03: v4.0.0
+
+    * 以下の修正・改善を実施
+      - #3383: オブジェクトクエリ equals().not()、オフライン $eq 対応追加
+      - #3342: [SSE Java]Windows環境でデバイストークン(MACアドレス)が生成できない
+
+    * 以下 OSS を更新
+      - jackson-core: 2.2.3 -> 2.7.1
+      - commons-logging: 1.1.3 -> 1.2
+      - httpclient: 4.3.6 -> 4.5.1 (Pure Java のみ)
+
+2016-02-22: v4.0.0 (beta1)
+
+    * 機能追加
+      - #3336: SSE Push 対応
+
+    * 機能削除
+      - SDE Push 対応
+
+    * 以下の修正・改善を実施
+      - 暗号化DB部品を 1.0.3 -> 1.0.5 に更新
+      - #2587: setLoginCacheValidTime()でLong.MAX_VALUEを指定した場合の挙動
+      - #2560: NbObjectにSerializableインタフェースを実装
+      - #2687: SQLCipher ライブラリを分離、Maven Central から入手するように変更
+      - #3258: auto_vacuum 対応
+
+2015-11-16: v3.0.0
+
+    v3.0.0 (beta4) からの修正無し
+
+2015-10-30: v3.0.0 (beta4)
+
+    * 以下の修正・改善を実施
+      - #2794: 同期バッチ処理エラー時の通知修正
+      - #2796: 同期Pushで409エラーが発生したら、同期結果は500ではなく409にする
+      - #2798: 同期バッチ送信で複数エラー発生時の同期結果ステータスを修正
+      - #2802: バッチAPI使用変更に伴いFT修正
+      - #2862: ファイル名指定アップロード時に Content-Length を設定する
+
+2015-10-19: v3.0.0 (beta3)
+
+    * 以下の修正・改善を実施
+      - #2685: バッチオペレーションのマルチテナント対応
+      - #2690: [分割同期] Push処理のオブジェクト分割数について
+
+2015-10-13: v3.0.0 (beta2)
+
+    * 以下の修正・改善を実施
+      - #2562: オブジェクト同期結果コールバックを UI スレッドで呼び出すようにした
+      - #2641: SSLv3 無効化対応 (POODLE脆弱性対策)
+      - #2419: [オフライン同期] Pull最終時刻の扱い改善
+      - #2592: PushInstallation　の使い方
+      - #1849: [AN6]オフライン：マルチスレッド対応
+      
+    * 以下の不具合を修正
+      - #2550: ローカルDBのインデックスが正しく設定・取得できない場合がある
+
+    * 以下ライブラリを更新
+      - Apache HTTP Client for Android : 2.3.3 -> 2.3.5.1
+      - Apache HTTP Core : 2.3.2 -> 2.3.3
+      - Apache HTTP Client: 2.3.3 -> 2.3.6
+
+2015-09-29: v3.0.0 (beta1)
+
+    * API仕様変更
+      - #2356: [AN11] REST API 強化対応(#1256(Userに任意フィールドを追加)拡張)
+      - #2160: [既存][ObjectStorage]limitのデフォルト値がREST API仕様書と異なる
+      - #2012: [AN8a] API改善 (バッチAPI)
+
+    * 以下の修正・改善を実施
+      - #2445: ログイン失敗時、Android SDK がログに記録を残すよう改善する
+      - #2216: [AN9a] 4Q SDK 申送り対応(追加案件)（インスタレーションの初期値再検討）
+      - #2217: [AN10a] サーバ2014申送り対応(追加案件)（オブジェクトのACLが不正な場合そのオブジェクトにアクセスできなくなる）
+      - #2439: [既存][User][Offline]ログイン時にログインキャッシュを上書きしていない。
+      - #2060: [既存][User]ユーザ更新のリクエスト生成時に「X-Session-Token」が設定されていない
+      - #2061: [既存][User]ユーザ削除のリクエスト生成時に「X-Session-Token」が設定されていない
+      - #2058: [既存][User]ユーザ名の最大文字数がREST API仕様書と異なる
+      - #2299: [既存][ObjectStorage]{"$in": null}でクエリ時の動作がオンラインとオフラインで異なる
+      - #2440: NbUser.isLoggedIn はセッショントークン有効期限をチェックするようにするべき
+      - #2281: 値一致のクエリ検索時の検索結果について
+      - #2296: [既存][ObjectStorage]オフラインで{"$ne": null}で検索してもnullのデータがヒットしてしまう
+      - #2297: DB性能改善　クエリからのSQL変換アルゴリズムについて
+
+    * 以下の不具合を修正
+      - #2472: [既存][User][Offline]オンラインとオフラインでステータスコードが異なる
+
+2015-09-11: v1.2.3
+
+    * API仕様変更
+      - #2262: マルチテナント対応 (Pure Java SDK のみ)
+      - #1894: [AN11] REST API 強化対応（User オブジェクトに任意のフィールドを追加できるようにする）
+      - #1894: [AN11] REST API 強化対応（複数クライアントから Group を同時更新されても良いよう、楽観ロックをかける）
+      - #1894: [AN11] REST API 強化対応（ユーザ管理: ユーザ名に "@" を使用できるようにする）
+      - #2216: [AN9a] 4Q SDK 申送り対応(追加案件)（サーバエラーでないエラーは、コールバックではなく例外をスローする）
+
+    * 以下の不具合を修正
+      - #2261: DB改善対応について
+      - #2297: DB性能改善　クエリからのSQL変換アルゴリズムについて コメント#9対応
+
+    * 以下の修正・改善を実施
+      - #2291: array型データに対するソート順序について
+      - #2146: [AN2] オブジェクトストレージオフライン機能改善(ローカルモード)
+      - #1857: [AN5][オフライン] オブジェクト分割同期　(件数が多いときの同期、メモリ・性能改善)
+      - #2446: コード検証結果の指摘対応(7/E版)
+      - #2417: [分割同期] クエリ実行時に、sortOrderに"_id"を付与すると400 BadRequestが返る
+
+2015-08-03: v1.2.2
+
+    * API 仕様変更
+      - NbUser/NbGroup : コールバック引数を NbUser/NbGroup に変更 (UserInfo/GroupInfo廃止)
+      - バケットモードを追加 : オンラインモード/レプリカモード
+        NbObjectBucketManager.getBucket() バケットモード引数追加
+      - ネットワークモード削除
+      - オブジェクト１件同期削除
+      - レプリカモードバケットに対するインデックス設定機能追加
+      - #2101: NbObjectBucket.getLastSyncTime() 追加
+
+    * 以下の修正・改善を実施
+      - #2116: User/Group API仕様変更、UserInfo/GroupInfo廃止
+      - #2091: 未ログイン状態でユーザ削除を行うと、500 Internal server errorが返される
+      - #2302: オフラインクエリ時の $regex の s, x オプションに対応。
+      - #1898 ローカルDB性能改善(Index対応)
+      - #1901 オブジェクトストレージオフライン機能改善(レプリカ/オンラインモード)
+      - #2172 [既存][ObjectStorage]save()、partUpdateObject()成功時のコールバックで渡されるcountがオンラインとオフラインで異なる
+      - SQLCipher を 3.2.0 -> 3.3.0 に更新
+      - 暗号化DB部品を 1.0.1 -> 1.0.3 に更新 (rawQuery対応)
+
+    * 以下の不具合を修正
+      - #2301: オフラインクエリ時に、配列内にnullが入っているとNPEになることがある問題を修正。
+      - #1918 [既存]オフライン時の$in検索で正しい結果が得られない
+      - #2182 [既存][ObjectStorage]NbQueryでsetClause()せずにequals()をコールするとNullPointerException発生
+      - #2210 [既存][Bucket]オンライン時、バケットのsave()成功時にアプリ側へdescriptionが反映されない
+      - #2234 [既存][同期]NbObjectSyncManager#startAutoSyncでintervalにMax値を設定した場合にオーバーフローが発生する
+
+2015-07-01: v1.2.1
+
+    * 仕様変更
+      - Android アプリは NebulaClientCore-*.jar 不要とした。
+        (NebulaClientCore-*.jar は Pure Java 専用)
+      
+    * 以下の修正・改善を実施
+      - #1523: NebulaObject.getObject() は Map を返すべき
+      - #1732: Androidのリファクタリングに伴うPUSH機能の改版について
+      - #1862: Push IT(iOS/Android)にてFailとなる件について
+      - Push機能リファクタリング　ITリファクタ(JUnit4対応等)
+      - #1607: 同期関連コールバックをUIスレッドで実行する
+      - #1914: [オブジェクトストレージ] オブジェクトの更新・削除 REST API 発行時に etag が送信されず、楽観ロックが効いていない
+      - #1951: PureJava IT 追加
+      - #1773: Push送信時にサーバから"JSON Exception"が返ってくる件について
+      - #804: NebulaGroupを複数生成できない / グループ固有の操作とグループ全体の操作が分離されていない
+      - #1750: UserInfo / GroupInfo クラス廃止
+      - #2035: [既存][User]ログイン時にユーザ名とEmailを両方指定してもEmailしかリクエストボディに設定されない
+      - #2036: [既存][User]ユーザ更新時に空のリクエストボディを送信しないようになっている
+      - #2037: [既存][User]自ユーザ取得のリクエスト生成時に「X-Session-Token」が設定されていない
+      - #2078: ［既存］SharedPreferencesキー名について
+      - #2089: [既存][User]ユーザ更新失敗時のエラー要因が固定文字列になる
+      - #2090: [既存][User]NbUser生成してすぐにsaveを呼ぶとNullPointerExceptionが発生する
+      - #2077:[既存]clearSessionToken()した時の振る舞いについて
+      - #2076:[既存]有効期限が切れた後のセッショントークン取得時の振る舞いについて
+      - #2100:[既存][Group]グループ更新時の振る舞いについて
+      - [Android Push]ユーザ削除時のMasterKey設定が反映されていないため、Push ITがFailする
+      - #2034:[既存][User]ユーザ情報変更時にカレントユーザでなくてもユーザ情報をキャッシュしている
+
+2015-05-29: v1.2.0
+
+    * 機能追加
+      - DataSecurity 機能追加 (ただしデフォルトは無効化(蓋閉め))
+
+    * API 仕様変更
+      - パッケージ変更
+        - トップレベルパッケージを com.nec.android.baas から
+          com.nec.baas に変更 (全クラス影響あり)
+        - 機能別にサブパッケージを分割: core, user, object, file,
+          json, push, generic など。
+
+      - 全クラス名一括変更
+        - 先頭に "Nb" プレフィクスを追加。
+        - "Nebula" プレフィクスがついていたクラスは "Nb" に置換。
+
+      - クラス名変更 (上記ルール以外のもの)
+        - BucketInfoCallback -> NbBucketCallback
+        - FileResolveConflict -> NbFileConflictResolver
+        - FileResolveConflictListener -> NbFileConflictResolverListener
+        - FileResolveConflictListener.SyncErrorCode
+          -> NbFileConflistResolverListener.SyncError
+        - NebulaDownloadCallback -> NbFileDownloadCallback
+        - IndexInfoCallback -> NbIndexCallback
+        - ResolveConflict -> NbObjectConflictResolver
+        - SyncEventListener -> NbObjectSYncEventListener
+        - GroupInfo -> NbGroupEntity
+        - GroupInfoCllback -> NbGroupEntityCallback
+        - UserInfo -> NbUserEntity
+        - UserInfoCallback -> NbUserEntityCallback
+
+      - 定数名変更
+        - Clause
+          - CASE_INSENSITIVITY -> IGNORE_CASE
+          - CASE_MULTILINE -> MULTILINE
+          - CASE_EXTENDED -> EXTENDED
+          - CASE_DOT_MULTILINE -> DOT_MATCH_NEWLINE
+
+      - その他
+        - NbObjectSyncEventListener (旧 SyncEventListener)
+          - エラーコード(int) を SyncError (enum) に変更。以下名称変更。
+            - ID_OVERLAP_ERROR -> ID_CONFLICTED
+            - PUSH_ERROR_RESYNCING -> SYNC_RETRYING
+        - NbObjectSyncResultCallback.onFailure() に NbErrorInfo 引数追加
+        - NbSettingクラス(旧NebulaSetting)
+          - getCachePolicy の返り値の型を int -> NbCachePolicy(enum) に変更
+          - setOperationMode の型を int -> NbOperationMode(enum) に変更
+
+    * #1658 Push送信時動作について(APNS/GCM)
+    * Push機能リファクタリング　errorInfoに関するassertを追加
+
+2015-04-17: v1.1.0
+
+    * 機能追加
+      - GCM Push 対応
+      - SDE Push 対応
+
+    * API 仕様変更
+      - エラーコールバック onFailure() に第二引数を追加。
+        詳細エラー情報を NbErrorInfo 型で引き渡す。
+      - 以下メソッドの返り値を変更(int -> enum型)
+        - NebulaService.getNetworkMode()
+        - NebulaService.getCachePolicy()
+        - NebulaObject.getSyncState()
+        - FileMetadata.getFileSyncState()
+        - ObjectBucket.getResolveConflictPolicy()
+        - FileBucket.getResolveConflictPolicy()
+      - 以下メソッドを Deprecated に変更。
+        - NebulaService.setNetworkMode(int)
+        - NebulaService.setCachePolicy(int)
+        - ObjectBucket.setResolveConflictPolicy(int)
+        - FileBucket.setResolveConflictPolicy(int)
+
+    * 動作仕様変更
+      - #1565: 最終更新時間の仕様変更
+      - #1566: ローカルDB操作およびコールバックを別スレッドにしない
+      - #1607: 同期関連コールバックは UI スレッドで呼び出す
+
+    * 以下の性能改善を実施
+      - #1372: JSONパース処理効率化(キャッシュ)
+      - #1419: オブジェクト同期時のローカルキャッシュクエリを効率化
+      - #1494: トランザクション処理追加(性能改善)
+      - #1496: 不要なログの削除(性能改善)
+      - #1535: JSONパーサ性能改善(Jackson Streaming API使用)
+      - #1552: JSON生成処理効率化
+
+    * 以下の改善を実施
+      - #1126: エラー通知callbackの情報追加と、Map型のJSONObject型への変更
+        (リファクタリング)
+      - #1361: Jettison ライブラリの依存性を削除
+      - #1366: SQLクエリ分割
+      - #1557: バックグランドスレッドの例外処理改善
+
+    * 以下のバグ修正
+      - #1727: オフライン設定を行わなくてもオフラインアクセスしてしまう
+
+2015-02-23 : v0.9.9
+    * ログ出力修正(#1501)
+    * 以下のバグ修正
+      - #1498: 再送時にrequestTokenが付加されていない
+      - #1499: 衝突未解決状態の再同期で状態が衝突削除になる
+
+2015-02-16 : v0.9.8
+    * ログ出力仕様変更(#1379)
+    * 以下のバグ修正
+      - #865: オフライン時のACLチェック判定不正
+      - #1409: 衝突解決後に同期すると再度衝突が発生する
+      - #1427, #1428: isSyncScopeTarget()機能不全
+      - #1430: オブジェクト同期で削除をサーバへ反映すると物理削除されてしまう
+      - #1445: オブジェクト同期のPUSHでサーバからNotFoundが返された時の手動解決でエラー通知される
+      - #1462: 同期完了後に同期時刻を更新していない
+
+2015-01-30 : v0.9.7
+    * オフラインでのログイン機能追加(#1377)
+    * 同期範囲設定時(setSyncScope)にキャッシュをクリアしないよう修正(#1378)
+    * ログ出力仕様変更(#1379)
+    * オブジェクトストレージのクエリに関する性能改善
+      - #1341, #1348, その他改善点修正
+    * 以下のバグ修正
+      - #865: オフライン時のACLチェック判定不正
+      - #1339: checkQuery() 修正。不正なJSONを渡して NullPointerException になっていたのを修正。
+      - #1371: NebulaObject#partUpdateObject時に更新前データが残ってしまう
+      - #1380: sync時ローカルDB内のデータを100件しか処理しない
+
+2015-01-13 : v0.9.6
+
+    * 以下のバグ修正
+      - オフラインでファイルキャッシュなしの状態でメタデータを更新すると、
+        衝突解決ができない
+      - ファイル削除時に不要なACLチェックが実施される
+
+2015-01-06 : v0.9.5.4
+
+    * 以下のバグ修正
+      - オフラインでファイル削除後のファイル名指定同期が失敗する
+      - NebulaServiceを再利用するとDatabaseエラーが発生する
+      - 手動解決でアプリから解決していが無い場合に衝突通知が２回通知される
+      - 同期中にエラーが発生した場合のエラーコード値誤り
+      - ファイル名変更後のメタデータが取得できていないケースの対応
+      - 手動解決時にonSyncConflictが2回通知される
+      - キャッシュ上ファイルを削除した状態で同期するとエラー
+      - 手動解決（サーバ優先）するとクライアントのファイルが削除されない
+      - ファイル本体無し、メタありの場合に重複ファイル名が生成される
+
+2014-12-22 : v0.9.5.3
+
+    * 以下のバグ修正
+      - ファイル同期時にバケットキャッシュできない
+      - ログイン後、オフライン時にログアウト状態になる場合がある
+    * build.gradle: 依存ライブラリ整理
+    * mksdk.sh 修正、SDK ディレクトリ変更(Gradle/Eclipse)
+
+2014-12-19 : v0.9.5.2
+
+    * 以下のバグ修正
+      - サーバ側ファイル削除状態の衝突発生でエラー
+      - オフラインで削除したファイルが同期でサーバに反映されない
+      - 衝突時のマニュアル解決でサーバ側ファイル不正
+      - サーバ側ファイル削除→衝突→マニュアル解決でエラー
+      - オブジェクト同期が失敗する
+      - アップロード時にローカル側のメタとファイルが不整合になる
+      - キャッシュ上にファイル本体が存在しない場合に同期失敗
+      - ACL権限が無いデータを同期した時の内部エラー値が不正
+    * ログイン処理をREAT API仕様書1.7版に合わせ更新
+
+2014-12-12 : v0.9.5.1
+
+    * バグ修正
+
+2014-12-08 : v0.9.5
+
+    * ファイルオフライン対応 (feature/offline4)
+    * #1187: limit 上限値制限解除
+    * GenericRestExecutor : バグ修正
+
+2014-11-06 : v0.9.4.9
+
+    * 以下のバグ修正
+    * #1075
+    
+2014-10-29 : v0.9.4.8
+
+    * 以下のバグ修正
+    * #1038
+
+2014-10-28 : v0.9.4.7
+
+2014-10-24 : v0.9.4.6
+
+    * 以下のバグ修正
+    * #993
+    * #1029
+    * #994
+    * #991
+    
+2014-10-21 : v0.9.4.5
+
+    * 以下のバグ修正
+    * #975
+    * #972
+    * #940
+    
+2014-10-08 : v0.9.4.3
+
+    * 以下のバグ修正
+    * #924
+    * #790
+    * #916
+    * #914
+    * #882
+    * #824
+    * #790
+    * #828
+    * #810
+    * #807
+
+2014-09-30 : v0.9.4.2
+
+    * 以下のバグ修正
+    * #864
+    * #863
+    * #895
+    * #894
+    * #889
+    * #882
+    * #808
+    * #806
+
+2014-09-27 : v0.9.4.1
+
+    * feature/offline3
+    * #812
+    * #834
+    * その他バグ修正
+
+2014-09-18 : v0.9.4
+
+    * オフライン同期機能(8月版) + バグ修正
+    * REST API 0.12 版対応
+    * NebulaServiceBuilder 変更、オフライン機能切り替え可能
+    * コールバック引数変更 (ArrayList -> List)
+    * 依存ライブラリ追加(Jettison)
+    * バグ修正
+
+2014-09-08 : v0.9.2.3
+
+    * 中間リリース (FT用)
+
+2014-09-03 : v0.9.2.2
+
+    * 中間リリース
+
+2014-09-01 : v0.9.2.1
+
+    * 中間リリース
+
+2014-08-29 : v0.9.3
+
+    * 以下のバグ修正
+    * #764 : ローカルファイルの読み書き時にデータが壊れる
+
+2014-08-26 : v0.9.2
+
+    * 以下のバグ修正
+    * #774 : CloseableHttpResponse をクローズしていない
+
+2014-08-21 : v0.9.1
+
+    * 以下のバグ修正
+    * #714 : httpclient 4.3 にしか存在しない InputStreamEntity を使用している
+    
+2014-08-20 : v0.9.0
+
+    * 初版

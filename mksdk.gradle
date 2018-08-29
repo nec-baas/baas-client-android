@@ -1,0 +1,51 @@
+//
+// SDK生成タスク
+//
+task sdk(dependsOn: [build, ':core:jar', ':android:jar', sourcesJar, javadocJar, copyDeps]) {
+    doLast {
+        def dest = "sdk/baas-client-android-v${version}"
+
+        // ディレクトリ削除
+        delete "sdk"
+
+        // Copy libraries
+        copy {
+            into "$dest/libs"
+            exclude '**/*-javadoc.jar'
+            exclude '**/*-test.jar'
+
+            from('core/build/libs/') {
+                include 'baas-client-core-*.jar'
+            }
+            from('android/build/libs') {
+                include 'baas-client-android-*.jar'
+            }
+        }
+
+        // Javadoc JAR
+        copy {
+            into "$dest/libs"
+            include '**/*-javadoc.jar'
+            from 'core/build/libs'
+            from 'android/build/libs'
+        }
+
+        // ドキュメント類
+        copy {
+             into "$dest"
+             from('./') {
+                 include "ReleaseNote.md"
+                 include "ChangeLog.txt"
+                 include "OSS.md"
+             }
+        }
+
+        // ZIP アーカイブ作成
+        task zipIt(type: Zip) {
+            from "sdk"
+            destinationDir = new File(".")
+            archiveName = "baas-client-android-v${version}.zip"
+        }   
+        zipIt.execute()
+    }
+}

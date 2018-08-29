@@ -1,0 +1,14 @@
+*~
+
+.gradle/
+bin/
+build/
+local.properties
+sdk/
+
+# Eclipse
+.settings/
+
+# Android Studio
+.idea/
+*.iml

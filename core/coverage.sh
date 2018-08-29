@@ -1,0 +1,1 @@
+gradle -i build jacocoTestReport
