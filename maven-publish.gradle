@@ -89,7 +89,7 @@ afterEvaluate { project ->
 
     signing {
         required {
-            isReleaseBuild() && gradle.taskGraph.hasTask(":core:signArchives")
+            isReleaseBuild() && gradle.taskGraph.hasTask(":core:uploadArchives")
         }
         sign configurations.archives
     }
