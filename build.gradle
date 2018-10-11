@@ -7,7 +7,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.android.tools.build:gradle:3.2.0'
 
         // for firebase
         classpath 'com.google.gms:google-services:4.0.1'
@@ -37,37 +37,45 @@ ext {
     minSdkVersion = 16
     compileSdkVersion = 27
     targetSdkVersion = 27
-    buildToolsVersion = "28.0.2"
+    buildToolsVersion = "28.0.3"
 
     versionCode = 9
-    versionName = "7.0.0"
+    versionName = "7.5.0"
 
     // dependency versions
-    ssepushClientVersion = "7.0.0"
+    ssepushClientVersion = "7.5.0"
 
+    // core dependencies
     jerseyVersion = "2.25.1" //jersey 2.26 は Java8 必要なため一旦 2.25.1 で留め置く
-    jacksonVersion = "2.9.4"
-    okhttpVersion = "3.10.0"
+    jacksonVersion = "2.9.6"
+    okhttpVersion = "3.11.0"
+    commonsCodecVersion = "1.11"
+
+    // android dependencies
     supportLibsVersion = "25.3.1"
     playServicesGcmVersion = "15.0.1"
     firebaseMessagingVersion = "17.0.0"
+
+    // build time only
     lombokVersion = "1.16.20"
 
-    assertjVersion = "2.9.0"
-    mockitoVersion = "2.15.0"
-    guavaVersion = "23.2"
+    // test dependencies
+    assertjVersion = "2.9.1"
+    mockitoVersion = "2.20.1"
+    guavaVersion = "25.1"
 }
 
 // 全サブプロジェクトの共通設定
 allprojects {
     group = 'com.nec.baas'
-    version = '7.0.0'
+    version = '7.5.0'
 
     repositories {
         if (hasProperty("additionalMavenUrl") && !additionalMavenUrl.isEmpty()) {
             maven { url additionalMavenUrl }
         }
         mavenLocal()
+        maven { url 'https://maven.google.com' }
         jcenter()
         google()
     }
@@ -81,7 +89,9 @@ allprojects {
     }
 
     configurations {
-        compile
+        runtimeClasspath
+        compileClasspath
+        debugCompileClasspath  // for android
 
         // Maven の 'provided' scope をエミュレート
         // (コンパイル時のみクラスパス追加。lombok用。)
@@ -100,6 +110,9 @@ subprojects {
             // okhttp3
             dependency "com.squareup.okhttp3:okhttp:${okhttpVersion}"
 
+            // commons-codec
+            dependency "commons-codec:commons-codec:${commonsCodecVersion}"
+
             // for SSE Push Client
             dependency("org.glassfish.jersey.core:jersey-client:${jerseyVersion}") {
                 exclude "org.glassfish.hk2.external:javax.inject"
@@ -111,10 +124,15 @@ subprojects {
     }
 
     // 依存ライブラリをコピー(fortify リリース向け)
-    task copyDeps(type:Copy) {
+    task copyDeps(type: Copy) {
         // fcmTest は不要
         if (!project.name.equals("fcmTest")) {
-            from configurations.compile
+            // #10439 コード検証(v7.5)
+            // configurations.api, configurations.implementation は参照できず、
+            // runtimeClasspath, compileClasspath を使うらしい。
+            //  -> https://discuss.gradle.org/t/copy-all-dependencies-of-implementation-configuration-fails/26666
+            // from (configurations.api + configurations.implementation)
+            from (configurations.runtimeClasspath + configurations.compileClasspath + configurations.debugCompileClasspath)
             into "build/deps"
         }
     }

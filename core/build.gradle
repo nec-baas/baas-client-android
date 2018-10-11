@@ -18,7 +18,7 @@ dependencies {
     api "com.squareup.okhttp3:okhttp"
 
     // apache commons-codec
-    api 'commons-codec:commons-codec:1.10'
+    api 'commons-codec:commons-codec'
 
     // SSE Push Client
     implementation "com.nec.baas.ssepush:ssepush-client:${rootProject.ext.ssepushClientVersion}"
@@ -26,7 +26,7 @@ dependencies {
     //provided "org.projectlombok:lombok:${lombokVersion}"
 
     //testImplementation 'commons-lang:commons-lang:2.3'
-    testImplementation 'org.xerial:sqlite-jdbc:3.8.7'
+    testImplementation 'org.xerial:sqlite-jdbc:3.23.1'
 
     testImplementation 'junit:junit:4.12'
     testImplementation "org.assertj:assertj-core:${rootProject.ext.assertjVersion}"

@@ -241,6 +241,11 @@ public class NbObjectBucketImpl extends NbBaseBucketImpl<NbObjectBucket> impleme
             param.put(NbKey.DELETE_MARK, "1");
         }
 
+        // projection
+        if (query.getProjection() != null && !query.getProjection().isEmpty()) {
+            param.put(NbKey.PROJECTION, query.getProjection().toJSONString());
+        }
+
         return param;
     }
 

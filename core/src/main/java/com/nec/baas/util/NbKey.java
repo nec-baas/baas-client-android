@@ -59,6 +59,7 @@ public abstract class NbKey {
     public static final String SKIP = "skip";
     public static final String LIMIT = "limit";
     public static final String COUNT = "count";
+    public static final String PROJECTION = "projection";
 
     // object(aggregate)
     public static final String PIPELINE = "pipeline";

@@ -40,6 +40,7 @@ public class NbQuery {
     private static final String SORT = "sort";
     private static final String DELETE_MARK = "deleteMark";
     private static final String COUNT_QUERY = "countQuery";
+    private static final String PROJECTION = "projection";
 
     /**
      * 検索条件
@@ -70,6 +71,12 @@ public class NbQuery {
      * 削除取得有無フラグ
      */
     private boolean mDeleteMark = false;
+
+    /**
+     * プロジェクション設定
+     * @since 7.5.0
+     */
+    private NbJSONObject mProjection;
 
     /**
      * Queryクラスのコンストラクタ。
@@ -240,6 +247,18 @@ public class NbQuery {
     }
 
     /**
+     * プロジェクションを設定する。<br>
+     * projectionJsonにnull、又は空オブジェクトを指定した場合、すでに設定済みのプロジェクション設定をクリアする。
+     * @param projectionJson プロジェクション設定
+     * @since 7.5.0
+     * @return this
+     */
+    public NbQuery setProjection(NbJSONObject projectionJson) {
+        mProjection = projectionJson;
+        return this;
+    }
+
+    /**
      * Query から JSON に変換する
      * @return JSON
      */
@@ -258,6 +277,10 @@ public class NbQuery {
 
         queryJson.put(DELETE_MARK, mDeleteMark);
         queryJson.put(COUNT_QUERY, mCountQuery);
+
+        if (mProjection != null) {
+            queryJson.put(PROJECTION, mProjection);
+        }
 
         return queryJson;
     }
@@ -317,6 +340,11 @@ public class NbQuery {
 
             if (queryJson.containsKey(COUNT_QUERY)) {
                 query.setCountQuery(queryJson.getBoolean(COUNT_QUERY));
+            }
+
+            if (queryJson.containsKey(PROJECTION)) {
+                NbJSONObject projectionJson = queryJson.getJSONObject(PROJECTION);
+                query.setProjection(projectionJson);
             }
             return query;
 

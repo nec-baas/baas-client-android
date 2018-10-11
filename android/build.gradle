@@ -151,9 +151,9 @@ dependencies {
 
     // JUnit4
     // see. http://dev.classmethod.jp/smartphone/android/android-studio-junit4-01/
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test:rules:1.0.1'
-    androidTestImplementation ('com.android.support.test.espresso:espresso-core:3.0.1') {
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestImplementation ('com.android.support.test.espresso:espresso-core:3.0.2') {
         exclude group: 'javax.inject', module: 'javax.inject'
     }
     androidTestImplementation "org.assertj:assertj-core:${assertjVersion}"
