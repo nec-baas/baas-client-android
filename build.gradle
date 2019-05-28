@@ -3,28 +3,37 @@ buildscript {
         if (hasProperty("additionalMavenUrl") && !additionalMavenUrl.isEmpty()) {
             maven { url additionalMavenUrl }
         }
+        maven {
+            url "https://plugins.gradle.org/m2/" // for gradle-lombok plugin
+        }
         jcenter()
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0'
+        classpath 'com.android.tools.build:gradle:3.4.0'
 
         // for firebase
         classpath 'com.google.gms:google-services:4.0.1'
+
+        // gradle-lombok plugin
+        classpath "io.franzbecker:gradle-lombok:2.2"
     }
 }
 
 plugins {
     id 'java'
 
-    id 'io.franzbecker.gradle-lombok' version '1.11'
+    // gradle-lombok plugin
+    // 1.12-1.14は正常動作しないため、1.11 に固定
+    // https://github.com/franzbecker/gradle-lombok/issues/53
+    // id 'io.franzbecker.gradle-lombok' version '1.11'
 
     // dependency management plugin
-    id 'io.spring.dependency-management' version '1.0.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.6.RELEASE'
 
     // for dependency update check
     // 'gradle dependencyUpdates' で dependency 更新チェック可能
-    id 'com.github.ben-manes.versions' version '0.17.0'
+    id 'com.github.ben-manes.versions' version '0.20.0'
 
     // android library の maven publish を行なうための plugin
     // see: https://github.com/dcendents/android-maven-gradle-plugin
@@ -39,16 +48,16 @@ ext {
     targetSdkVersion = 27
     buildToolsVersion = "28.0.3"
 
-    versionCode = 9
-    versionName = "7.5.0"
+    versionCode = 10
+    versionName = "7.5.1"
 
     // dependency versions
     ssepushClientVersion = "7.5.0"
 
     // core dependencies
     jerseyVersion = "2.25.1" //jersey 2.26 は Java8 必要なため一旦 2.25.1 で留め置く
-    jacksonVersion = "2.9.6"
-    okhttpVersion = "3.11.0"
+    jacksonVersion = "2.9.8"
+    okhttpVersion = "3.12.1"
     commonsCodecVersion = "1.11"
 
     // android dependencies
@@ -57,18 +66,18 @@ ext {
     firebaseMessagingVersion = "17.0.0"
 
     // build time only
-    lombokVersion = "1.16.20"
+    lombokVersion = "1.18.6"
 
     // test dependencies
     assertjVersion = "2.9.1"
-    mockitoVersion = "2.20.1"
-    guavaVersion = "25.1"
+    mockitoVersion = "2.23.4"
+    guavaVersion = "27.0.1"
 }
 
 // 全サブプロジェクトの共通設定
 allprojects {
     group = 'com.nec.baas'
-    version = '7.5.0'
+    version = '7.5.1'
 
     repositories {
         if (hasProperty("additionalMavenUrl") && !additionalMavenUrl.isEmpty()) {
@@ -184,8 +193,3 @@ task copyDeps(dependsOn:
 
 // SDK生成タスク
 apply from: 'mksdk.gradle'
-
-// gradle wrapper
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.6'
-}

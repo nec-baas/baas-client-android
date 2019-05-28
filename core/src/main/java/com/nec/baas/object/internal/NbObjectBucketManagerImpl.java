@@ -113,7 +113,7 @@ public class NbObjectBucketManagerImpl extends NbBaseBucketManagerImpl<NbObjectB
             @Override
             public void onSuccess(Response response, NbJSONObject body) {
 
-                final NbObjectBucket bucket = makeBucket(body, NbBucketMode.ONLINE);
+                final NbObjectBucket bucket = jsonToBucket(body, NbBucketMode.ONLINE);
 
                 callback.onSuccess(bucket);
             }
@@ -148,7 +148,7 @@ public class NbObjectBucketManagerImpl extends NbBaseBucketManagerImpl<NbObjectB
                 callback, "NbObjectBucketManagerImpl.getBucket()") {
             @Override
             public void onSuccess(Response response, NbJSONObject body) {
-                final NbObjectBucket bucket = makeBucket(body, bucketMode);
+                final NbObjectBucket bucket = jsonToBucket(body, bucketMode);
 
                 if (bucketMode == NbBucketMode.REPLICA) {
                     // 同名のローカルモードのバケットが存在するかを確認
@@ -184,7 +184,7 @@ public class NbObjectBucketManagerImpl extends NbBaseBucketManagerImpl<NbObjectB
             // バケットモードをチェック
             NbJSONObject json = bucket.getJsonData();
             if (bucketMode == NbBucketMode.fromObject(json.get(NbKey.BUCKET_MODE))) {
-                resultBucket = makeBucket(bucket.getJsonData(), bucketMode);
+                resultBucket = jsonToBucket(bucket.getJsonData(), bucketMode);
             } else {
                 throw new IllegalStateException("Bucket of the same name already exists.");
             }

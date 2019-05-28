@@ -23,10 +23,14 @@ dependencies {
     // SSE Push Client
     implementation "com.nec.baas.ssepush:ssepush-client:${rootProject.ext.ssepushClientVersion}"
 
-    //provided "org.projectlombok:lombok:${lombokVersion}"
+    // lombok
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
     //testImplementation 'commons-lang:commons-lang:2.3'
-    testImplementation 'org.xerial:sqlite-jdbc:3.23.1'
+    testImplementation 'org.xerial:sqlite-jdbc:3.25.2'
 
     testImplementation 'junit:junit:4.12'
     testImplementation "org.assertj:assertj-core:${rootProject.ext.assertjVersion}"

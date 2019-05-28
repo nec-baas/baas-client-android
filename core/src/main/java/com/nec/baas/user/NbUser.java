@@ -325,7 +325,7 @@ public class NbUser {
         //リクエスト作成
         NbJSONObject bodyJson = param.toJson();
 
-        Request request = service.getHttpRequestFactory().post(LOGIN_URL).body(bodyJson).sessionNone().build();
+        Request request = service.getHttpRequestFactory().post(LOGIN_URL).body(bodyJson).build();
 
         NbRestResponseHandler handler = new NbSimpleRestResponseHandler(callback, "NbUser.loginOnLine()") {
             @Override
@@ -463,14 +463,8 @@ public class NbUser {
             log.fine("logout() online");
             //リクエスト作成
             Request request;
-            try {
-                // Logout APIはsessionTokenが必須だが、クライアント証明書認証向けにOptionalとしてサーバに問い合わせる
-                request = _service.getHttpRequestFactory().delete(LOGIN_URL).sessionOptional().build();
-            } catch (SecurityException e) {
-                log.severe("logout() makeDeleteRequest() ERR");
-                callback.onFailure(NbStatus.UNAUTHORIZED, new NbErrorInfo("Failed to make DELETE request."));
-                return;
-            }
+            // Logout APIはsessionTokenが必須だが、クライアント証明書認証向けにOptionalとしてサーバに問い合わせる
+            request = _service.getHttpRequestFactory().delete(LOGIN_URL).build();
 
             NbRestResponseHandler handler = new NbSimpleRestResponseHandler(callback, "NbUser.logout()") {
                 @Override
@@ -609,7 +603,7 @@ public class NbUser {
         if (getOptions() != null) {
             bodyJson.put(NbKey.OPTIONS, getOptions());
         }
-        Request request = mService.getHttpRequestFactory().post(USER_URL).body(bodyJson).sessionNone().build();
+        Request request = mService.getHttpRequestFactory().post(USER_URL).body(bodyJson).build();
 
         NbRestResponseHandler handler = new NbSimpleRestResponseHandler(callback, "NbUser.register()") {
             @Override
@@ -964,7 +958,7 @@ public class NbUser {
         Request request;
         // クライアント証明書認証時はセッショントークンが存在しないケースがあるため、optionalとする
         // サーバ問い合わせ時にセッショントークンが付与されていない場合は、401エラーとなる
-        request = service.getHttpRequestFactory().get(USER_URL).addPathComponent(CURRENT_PATH_COMPONENT).sessionOptional().build();
+        request = service.getHttpRequestFactory().get(USER_URL).addPathComponent(CURRENT_PATH_COMPONENT).build();
 //        try {
 //            request = service.getHttpRequestFactory().get(USER_URL).addPath(CURRENT_URL).sessionRequired().build();
 //        } catch (SecurityException e) {
@@ -1046,7 +1040,7 @@ public class NbUser {
         if (email != null) {
             bodyJson.put(NbKey.EMAIL, email);
         }
-        Request request = _service.getHttpRequestFactory().post(PASSWORD_RESET_URL).body(bodyJson).sessionNone().build();
+        Request request = _service.getHttpRequestFactory().post(PASSWORD_RESET_URL).body(bodyJson).build();
 
         NbRestResponseHandler handler = new NbSimpleRestResponseHandler(callback, "NbUser.resetPassword()") {
             @Override
@@ -1136,6 +1130,11 @@ public class NbUser {
                     NbOfflineService offlineService = mService.getOfflineService();
                     if (offlineService != null) {
                         offlineService.loginService().updateLoginCache(password, mUserEntity);
+                    }
+
+                    // #10451 パスワード変更時は、セッショントークンを破棄する
+                    if (password != null) {
+                        clearSessionToken(mService);
                     }
                 }
 

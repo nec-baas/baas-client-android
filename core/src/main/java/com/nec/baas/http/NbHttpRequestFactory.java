@@ -157,7 +157,6 @@ public class NbHttpRequestFactory {
         private RequestBody mRequestBody;
         private String mPath;
         private Map<String,String> mParams = null;
-        private boolean sessionSpecified = false;
         private boolean mUserAgentSet = false;
 
         protected Builder() {
@@ -192,9 +191,10 @@ public class NbHttpRequestFactory {
             setUrlParams();
             setCommonHeader();
 
-            if (!sessionSpecified) {
-                // デフォルトは Optional。
-                sessionOptional();
+            // #11443: add sessionToken if exists
+            String token = mSessionToken.getSessionToken();
+            if (token != null) {
+                mBuilder.addHeader(HEADER_SESSION_TOKEN, token);
             }
 
             return mBuilder.build();
@@ -364,7 +364,7 @@ public class NbHttpRequestFactory {
         }
 
         /**
-         * セッショントークンヘッダを設定する。
+         * セッショントークンの有無チェックを行う。
          * セッショントークンがない(未ログイン)の場合は SecurityException が
          * スローされる。
          * @return this
@@ -372,33 +372,9 @@ public class NbHttpRequestFactory {
          */
         public Builder sessionRequired() throws SecurityException {
             String token = mSessionToken.getSessionToken();
-            if (token != null) {
-                mBuilder.addHeader(HEADER_SESSION_TOKEN, token);
-            } else {
+            if (token == null) {
                 throw new SecurityException("Not logged in");
             }
-            sessionSpecified = true;
-            return this;
-        }
-
-        /**
-         * セッショントークンがあればヘッダを設定する。
-         * @return this
-         */
-        public Builder sessionOptional() {
-            String token = mSessionToken.getSessionToken();
-            if (token != null) {
-                mBuilder.addHeader(HEADER_SESSION_TOKEN, token);
-            }
-            sessionSpecified = true;
-            return this;
-        }
-
-        /**
-         * セッショントークンを設定しない。
-         */
-        public Builder sessionNone() {
-            sessionSpecified = true;
             return this;
         }
 

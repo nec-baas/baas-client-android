@@ -86,14 +86,19 @@ public abstract class NbBaseBucketManagerImpl<T extends NbBaseBucket> {
      */
     public void createBucket(@NonNull final String bucketName, String description, NbAcl acl,
                              NbContentAcl contentAcl, @NonNull final NbCallback<T> callback) {
+        createBucket(bucketName, description, acl, contentAcl, false, callback);
+    }
 
+    public void createBucket(@NonNull final String bucketName, String description,
+                             NbAcl acl, NbContentAcl contentAcl, boolean noAcl,
+                             @NonNull final NbCallback<T> callback) {
         //バケット名チェック
         if (!isValidBucketName(bucketName)) {
             throw new IllegalArgumentException(INVALID_BUCKET_NAME);
         }
 
         //リクエスト生成
-        Request request = makeRequestCreateBucket(bucketName, acl, contentAcl, description);
+        Request request = makeRequestCreateBucket(bucketName, acl, contentAcl, description, noAcl);
 
         //レスポンスハンドラ生成
         NbRestResponseHandler handler = makeResponseHandlerCreateBucket(bucketName, callback);
@@ -112,10 +117,21 @@ public abstract class NbBaseBucketManagerImpl<T extends NbBaseBucket> {
      * バケット作成のリクエスト生成
      */
     protected Request makeRequestCreateBucket(
-            String bucketName, NbAcl acl, NbContentAcl contentAcl, String description) {
-        NbJSONObject json = new NbJSONObject();
-        String requestBody = null;
+            String bucketName, NbAcl acl, NbContentAcl contentAcl, String description, boolean noAcl) {
+        NbJSONObject json = makeRequestCreateBucketJson(acl, contentAcl, description, noAcl);
 
+        String requestBody = null;
+        if (!json.isEmpty()) {
+            requestBody = json.toJSONString();
+        }
+        String apiUrl = mBucketUrl + "/" + bucketName;
+        Request request = getHttpRequestFactory().put(apiUrl).body(requestBody).build();
+
+        return request;
+    }
+
+    protected NbJSONObject makeRequestCreateBucketJson(NbAcl acl, NbContentAcl contentAcl, String description, boolean noAcl) {
+        NbJSONObject json = new NbJSONObject();
         if (acl != null) {
             json.put(NbKey.ACL, acl.toJsonObject());
         }
@@ -127,13 +143,10 @@ public abstract class NbBaseBucketManagerImpl<T extends NbBaseBucket> {
         } else {
             json.put(NbKey.DESCRIPTION, "");
         }
-        if (!json.isEmpty()) {
-            requestBody = json.toJSONString();
+        if (noAcl) {
+            json.put(NbKey.NO_ACL, noAcl);
         }
-        String apiUrl = mBucketUrl + "/" + bucketName;
-        Request request = getHttpRequestFactory().put(apiUrl).body(requestBody).build();
-
-        return request;
+        return json;
     }
 
     /**
@@ -189,7 +202,7 @@ public abstract class NbBaseBucketManagerImpl<T extends NbBaseBucket> {
         List<NbJSONObject> bucketList = (List<NbJSONObject>) body.get(NbKey.RESULTS);
         if (bucketList != null) {
             for (NbJSONObject bucketJson : bucketList) {
-                resultBuckets.add(makeBucket(bucketJson, bucketMode));
+                resultBuckets.add(jsonToBucket(bucketJson, bucketMode));
             }
         }
         return resultBuckets;
@@ -205,7 +218,7 @@ public abstract class NbBaseBucketManagerImpl<T extends NbBaseBucket> {
         if (bucketList != null) {
             for (NbJSONObject bucketJson : bucketList) {
                 NbBucketMode bucketMode = NbBucketMode.fromObject(bucketJson.get(NbKey.BUCKET_MODE));
-                resultBuckets.add(makeBucket(bucketJson, bucketMode));
+                resultBuckets.add(jsonToBucket(bucketJson, bucketMode));
             }
         }
         return resultBuckets;
@@ -247,16 +260,20 @@ public abstract class NbBaseBucketManagerImpl<T extends NbBaseBucket> {
     /**
      * JSON → Bucket変換
      */
-    protected T makeBucket(NbJSONObject body, NbBucketMode bucketMode) {
+    protected T jsonToBucket(NbJSONObject body, NbBucketMode bucketMode) {
         T bucket = newBucket(body.getString(NbKey.NAME), bucketMode);
 
         NbAcl acl = new NbAcl(body.getJSONObject(NbKey.ACL));
-        bucket.setAcl(acl);
-
         NbContentAcl contentAcl = new NbContentAcl(body.getJSONObject(NbKey.CONTENT_ACL));
-        bucket.setContentAcl(contentAcl);
 
-        bucket.setDescription(body.getString(NbKey.DESCRIPTION));
+        bucket
+                .setAcl(acl)
+                .setContentAcl(contentAcl)
+                .setDescription(body.getString(NbKey.DESCRIPTION));
+
+        if (body.containsKey(NbKey.NO_ACL)) {
+            bucket.setNoAcl(body.getBoolean(NbKey.NO_ACL));
+        }
 
         return bucket;
     }

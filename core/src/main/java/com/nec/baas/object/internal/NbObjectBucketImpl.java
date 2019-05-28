@@ -304,7 +304,7 @@ public class NbObjectBucketImpl extends NbBaseBucketImpl<NbObjectBucket> impleme
 
     private void saveOnline(final NbCallback<NbObjectBucket> callback) {
         //リクエストボディ作成
-        NbJSONObject bodyJson = getBodyJson();
+        NbJSONObject bodyJson = getBodyJsonForObjectBucket();
         String requestBody = bodyJson.toJSONString();
 
         Request request = getHttpRequestFactory()
@@ -321,7 +321,10 @@ public class NbObjectBucketImpl extends NbBaseBucketImpl<NbObjectBucket> impleme
                 setContentAcl(resultContentAcl);
 
                 setDescription(body.getString(NbKey.DESCRIPTION));
-
+                //NoACL フラグ設定
+                if (body.containsKey(NbKey.NO_ACL)) {
+                    setNoAcl(body.getBoolean(NbKey.NO_ACL));
+                }
                 callback.onSuccess(NbObjectBucketImpl.this);
             }
         };
@@ -330,7 +333,7 @@ public class NbObjectBucketImpl extends NbBaseBucketImpl<NbObjectBucket> impleme
 
     private void saveToLocal(final NbCallback<NbObjectBucket> callback) {
         // description等を必須にするのは、オンラインと合わせておく
-        NbJSONObject json = getBodyJson();
+        NbJSONObject json = getBodyJsonForObjectBucket();
         // バケット名とモードをJSONに入れる
         json.put(NbKey.NAME, mBucketName);
         json.put(NbKey.BUCKET_MODE, mMode.idString());
@@ -356,6 +359,10 @@ public class NbObjectBucketImpl extends NbBaseBucketImpl<NbObjectBucket> impleme
             setContentAcl(contentAcl);
 
             setDescription(resultJson.getString(NbKey.DESCRIPTION));
+            //NoACL フラグ設定
+            if (resultJson.containsKey(NbKey.NO_ACL)) {
+                setNoAcl(resultJson.getBoolean(NbKey.NO_ACL));
+            }
             callback.onSuccess(NbObjectBucketImpl.this);
         } else {
             // read権限がない場合、このルートに入ってしまう

@@ -15,7 +15,13 @@ import java.util.logging.Logger;
  */
 public class NbGenericLogger extends NbLogger {
     static {
-        System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$s %3$s - %5$s%6$s%n");
+        try {
+            System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$s %3$s - %5$s%6$s%n");
+        } catch (SecurityException e) {
+            // #11459: Security Manager が有効な場合、setProperty() がエラーになる場合がある。
+            Logger.getLogger(NbGenericLogger.class.getName())
+                    .warning("System.setProperty failed: " + e.getMessage());
+        }
     }
 
     public static class Factory implements NbLogger.LoggerFactory {

@@ -907,7 +907,7 @@ public class NbFileBucketImpl extends NbBaseBucketImpl<NbFileBucket> implements 
             return;
         }
         //リクエスト作成
-        NbJSONObject bodyJson = getBodyJson();
+        NbJSONObject bodyJson = getBodyJsonForFileBucket();
 
         Request request = getHttpRequestFactory()
                 .put(NbConsts.FILE_BUCKET_PATH).addPathComponent(mBucketName)

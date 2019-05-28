@@ -208,10 +208,10 @@ public abstract class NbPushInstallation {
             // 完全上書き更新の場合
             NbJSONObject fullUpdateJson = new NbJSONObject();
             fullUpdateJson.put(KEY_FULL_UPDATE, bodyJson);
-            request = mNebulaService.getHttpRequestFactory().put(PUSH_INSTALLATIONS_URL).addPathComponent(getInstallationId()).body(fullUpdateJson).sessionOptional().build();
+            request = mNebulaService.getHttpRequestFactory().put(PUSH_INSTALLATIONS_URL).addPathComponent(getInstallationId()).body(fullUpdateJson).build();
         } else {
             // 新規登録の場合
-            request = mNebulaService.getHttpRequestFactory().post(PUSH_INSTALLATIONS_URL).body(bodyJson).sessionOptional().build();
+            request = mNebulaService.getHttpRequestFactory().post(PUSH_INSTALLATIONS_URL).body(bodyJson).build();
         }
 
         return request;
@@ -229,7 +229,7 @@ public abstract class NbPushInstallation {
         setJsonToBody(bodyJson, false);
 
         // リクエスト生成
-        Request request = mNebulaService.getHttpRequestFactory().put(PUSH_INSTALLATIONS_URL).addPathComponent(getInstallationId()).body(bodyJson).sessionOptional().build();
+        Request request = mNebulaService.getHttpRequestFactory().put(PUSH_INSTALLATIONS_URL).addPathComponent(getInstallationId()).body(bodyJson).build();
 
         return request;
     }
@@ -240,7 +240,7 @@ public abstract class NbPushInstallation {
      */
     protected Request makeRequestForRefresh() {
         // リクエスト生成
-        Request request = mNebulaService.getHttpRequestFactory().get(PUSH_INSTALLATIONS_URL).addPathComponent(getInstallationId()).sessionNone().build();
+        Request request = mNebulaService.getHttpRequestFactory().get(PUSH_INSTALLATIONS_URL).addPathComponent(getInstallationId()).build();
 
         return request;
     }
@@ -251,7 +251,7 @@ public abstract class NbPushInstallation {
      */
     protected Request makeRequestForDelete() {
         // リクエスト生成
-        Request request = mNebulaService.getHttpRequestFactory().delete(PUSH_INSTALLATIONS_URL).addPathComponent(getInstallationId()).sessionOptional().build();
+        Request request = mNebulaService.getHttpRequestFactory().delete(PUSH_INSTALLATIONS_URL).addPathComponent(getInstallationId()).build();
 
         return request;
     }

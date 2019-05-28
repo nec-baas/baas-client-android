@@ -1,7 +1,5 @@
-//
-// SDK生成タスク
-//
-task sdk(dependsOn: [build, ':core:jar', ':android:jar', sourcesJar, javadocJar, copyDeps]) {
+// SDK ディレクトリ生成
+task sdkDir(dependsOn: [build, ':core:jar', ':android:jar', sourcesJar, javadocJar, copyDeps]) {
     doLast {
         def dest = "sdk/baas-client-android-v${version}"
 
@@ -39,13 +37,17 @@ task sdk(dependsOn: [build, ':core:jar', ':android:jar', sourcesJar, javadocJar,
                  include "OSS.md"
              }
         }
-
-        // ZIP アーカイブ作成
-        task zipIt(type: Zip) {
-            from "sdk"
-            destinationDir = new File(".")
-            archiveName = "baas-client-android-v${version}.zip"
-        }   
-        zipIt.execute()
     }
 }
+
+// ZIP アーカイブ作成
+task sdkZip(type: Zip) {
+    from "sdk"
+    destinationDir = new File(".")
+    archiveName = "baas-client-android-v${version}.zip"
+}   
+
+//
+// SDK生成タスク
+//
+task sdk(dependsOn: [sdkDir, sdkZip])

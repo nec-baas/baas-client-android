@@ -29,7 +29,26 @@ public interface NbObjectBucketManager {
      * @param callback 作成したバケットを取得するコールバック。
      */
     void createBucket(final String bucketName, String description, NbAcl acl,
-                             NbContentAcl contentAcl, final NbCallback<NbObjectBucket> callback);
+                      NbContentAcl contentAcl, final NbCallback<NbObjectBucket> callback);
+
+    /**
+     * オブジェクトバケットの作成を行う。
+     * <p>
+     * description、ACL、contentAclはオプションのため指定しなくても良い。
+     * バケットの作成にはROOTバケットに対するcreate権限が必要となる。
+     * 本メソッドはレプリカ・ローカルモードでのバケット情報更新は不可とする。
+     * </p>
+     * @param bucketName 作成するバケットの名前
+     * @param description バケットの説明文
+     * @param acl バケットに設定するACL
+     * @param contentAcl バケットに設定するコンテンツACL
+     * @param noAcl ACLレスバケット時は true
+     * @param callback 作成したバケットを取得するコールバック。
+     * @since 7.5.1
+     */
+    void createBucket(final String bucketName, String description,
+                      NbAcl acl, NbContentAcl contentAcl, boolean noAcl,
+                      final NbCallback<NbObjectBucket> callback);
 
     /**
      * サーバ上のオブジェクトバケット一覧を取得する。

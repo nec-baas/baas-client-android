@@ -65,4 +65,18 @@ public interface NbBaseBucket<T extends NbBaseBucket> {
      * @param description バケットの説明文
      */
     T setDescription(String description);
+
+    /**
+     * ACLレスモードを取得する (Object Bucket でのみ有効)
+     * @return ACLレスバケットの場合は true
+     * @since 7.5.1
+     */
+    boolean isNoAcl();
+
+    /**
+     * ACLレスモードを設定する (Object Bucket でのみ有効)
+     * @param noAcl ACLレスバケットの場合は true
+     * @since 7.5.1
+     */
+    T setNoAcl(boolean noAcl);
 }

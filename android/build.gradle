@@ -133,8 +133,11 @@ dependencies {
     // multidex を使用する場合は以下を有効にする
     implementation 'com.android.support:multidex:1.0.3'
 
-    // Annotation Processors
+    // lombok
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     androidTestAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
     // core test jar 読み込み。
@@ -169,9 +172,10 @@ preBuild.dependsOn ':core:testJar'
 // JAR 生成 (デフォルトでは AAR しか生成しないため)
 task jar(type: Jar, dependsOn: assemble) {
     //from android.sourceSets.main.java
-    from 'build/intermediates/classes/release'
+    from 'build/intermediates/javac/release/compileReleaseJavaWithJavac/classes'
     exclude '**/R$*.class'
     exclude '**/R.class'
+    includeEmptyDirs = false
 }
 
 jar {

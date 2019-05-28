@@ -37,6 +37,7 @@ public abstract class NbKey {
     public static final String NAME = "name";
     public static final String DESCRIPTION = "description";
     public static final String BUCKET_MODE = "bucketMode";
+    public static final String NO_ACL = "noAcl";
 
     // file
     public static final String FILENAME = "filename";

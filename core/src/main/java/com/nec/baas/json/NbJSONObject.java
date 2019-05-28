@@ -103,6 +103,20 @@ public class NbJSONObject extends LinkedHashMap<String,Object> implements Clonea
     }
 
     /**
+     * 指定キーに値を代入する。put() と異なり、返り値は this となる。
+     * <p>
+     * 本オブジェクトが Immutable な場合、UnsupportedOperationException がスローされる。
+     * valueにプリミティブ型配列が指定された場合、IllegalArgumentException がスローされる。
+     * @param key キー
+     * @param value 値
+     * @return this
+     */
+    public NbJSONObject append(@NonNull String key, Object value) {
+        this.put(key, value);
+        return this;
+    }
+
+    /**
      * 引数value内に存在する配列を再帰的にListに変換する。
      * value内にプリミティブ型配列が存在した場合、IllegalArgumentException がスローされる。
      * @param value 変換したいデータ

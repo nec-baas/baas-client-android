@@ -70,8 +70,8 @@ afterEvaluate { project ->
 
             licenses {
                 license {
-                    name "MIT License"
-                    url "https://opensource.org/licenses/MIT"
+                    name "Apache License, Version 2.0"
+                    url "https://opensource.org/licenses/Apache-2.0"
                     distribution "repo"
                     comments "Copyright (c) 2013-2018, NEC Corporation."
                 }

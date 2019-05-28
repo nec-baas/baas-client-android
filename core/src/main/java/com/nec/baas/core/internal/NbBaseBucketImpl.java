@@ -32,6 +32,8 @@ public abstract class NbBaseBucketImpl<T extends NbBaseBucket> implements NbBase
     protected String mBucketName;
     protected NbBucketMode mMode;
     protected NbAcl mAcl;
+    /** @since 7.5.1 */
+    protected boolean mNoAcl;
 
     @Getter // for test
     protected String mApiUrl;
@@ -44,6 +46,7 @@ public abstract class NbBaseBucketImpl<T extends NbBaseBucket> implements NbBase
 
     protected NbContentAcl mContentAcl;
     protected String mDescription;
+
 
     /**
      * コンストラクタ
@@ -103,6 +106,17 @@ public abstract class NbBaseBucketImpl<T extends NbBaseBucket> implements NbBase
         return mAcl;
     }
 
+    /** {@inheritDoc} */
+    public T setNoAcl(boolean noAcl) {
+        mNoAcl = noAcl;
+        return (T)this;
+    }
+
+    /** {@inheritDoc} */
+    public boolean isNoAcl() {
+        return mNoAcl;
+    }
+
     /**
      * コンテンツACLを設定する。<p/>
      * save()を実行するまで設定は有効にならない。
@@ -144,12 +158,26 @@ public abstract class NbBaseBucketImpl<T extends NbBaseBucket> implements NbBase
     }
 
     /**
-     * バケット情報設定に必要なリクエストbody情報を取得する。<br>
+     *
+     * ファイルバケット情報設定に必要なリクエストbody情報を取得する。<br>
      * 呼び出し条件、本メソッド呼び出し前にACL、ContentAcl、descriptionの設定を<br>
      * 済ませておくこと。<br>
      * @return Jsonオブジェクト（body map）
      */
-    protected NbJSONObject getBodyJson() {
+    protected NbJSONObject getBodyJsonForFileBucket() {
+        return getBodyJson(false);
+    }
+    /**
+     *
+     * オブジェクトバケット情報設定に必要なリクエストbody情報を取得する。<br>
+     * 呼び出し条件、本メソッド呼び出し前にACL、ContentAcl、descriptionとnoAclの設定を<br>
+     * 済ませておくこと。<br>
+     * @return Jsonオブジェクト（body map）
+     */
+    protected NbJSONObject getBodyJsonForObjectBucket() {
+        return getBodyJson(true);
+    }
+    private NbJSONObject getBodyJson(boolean hasNoAcl) {
         NbJSONObject bodyJson = new NbJSONObject();
         if (mAcl == null) {
             throw new IllegalStateException("No ACL");
@@ -163,6 +191,9 @@ public abstract class NbBaseBucketImpl<T extends NbBaseBucket> implements NbBase
         bodyJson.put(NbKey.ACL, mAcl.toJsonObject());
         bodyJson.put(NbKey.CONTENT_ACL, mContentAcl.toJsonObject());
         bodyJson.put(NbKey.DESCRIPTION, mDescription);
+        if (hasNoAcl) {
+            bodyJson.put(NbKey.NO_ACL, mNoAcl);
+        }
         return bodyJson;
     }
 }

@@ -145,7 +145,7 @@ public class NbPush {
 
         // リクエスト生成
         NbHttpRequestFactory requestFactory = mNebulaService.getHttpRequestFactory();
-        Request request = requestFactory.post(PUSH_NOTIFICATIONS_URL).body(bodyJson).sessionNone().build();
+        Request request = requestFactory.post(PUSH_NOTIFICATIONS_URL).body(bodyJson).build();
 
         // リクエスト送信
         NbRestResponseHandler handler = new NbSimpleRestResponseHandler(callback, "NbPush.sendPush()") {

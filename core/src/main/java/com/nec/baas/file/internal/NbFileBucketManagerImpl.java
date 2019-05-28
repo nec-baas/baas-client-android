@@ -71,7 +71,7 @@ public class NbFileBucketManagerImpl extends NbBaseBucketManagerImpl<NbFileBucke
                 "NbFileBucketManager.createBucket") {
             @Override
             public void onSuccess(Response response, NbJSONObject body) {
-                final NbFileBucket bucket = makeBucket(body, NbBucketMode.ONLINE);
+                final NbFileBucket bucket = jsonToBucket(body, NbBucketMode.ONLINE);
                 callback.onSuccess(bucket);
             }
         };
@@ -107,7 +107,7 @@ public class NbFileBucketManagerImpl extends NbBaseBucketManagerImpl<NbFileBucke
                 callback, "NbFileBucketManager.getBucket()") {
             @Override
             public void onSuccess(Response response, NbJSONObject body) {
-                final NbFileBucket bucket = makeBucket(body, bucketMode);
+                final NbFileBucket bucket = jsonToBucket(body, bucketMode);
 //                cacheBucket(bucket);
                 callback.onSuccess(bucket);
             }
