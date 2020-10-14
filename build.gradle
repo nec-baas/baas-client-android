@@ -44,9 +44,9 @@ plugins {
 // http://tools.android.com/tech-docs/new-build-sydostem/tips
 ext {
     minSdkVersion = 16
-    compileSdkVersion = 27
-    targetSdkVersion = 27
-    buildToolsVersion = "28.0.3"
+    compileSdkVersion = 30
+    targetSdkVersion = 30
+    buildToolsVersion = "30.0.2"
 
     versionCode = 10
     versionName = "7.5.1"
