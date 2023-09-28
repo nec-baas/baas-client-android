@@ -36,7 +36,7 @@ core ライブラリの単体開発時にのみ使用する。
         <ssepush-client.version>7.5.0</ssepush-client.version>
 
         <!-- build time dependencies -->
-        <lombok.version>1.18.4</lombok.version>
+        <lombok.version>1.18.30</lombok.version>
 
         <!-- test dependencies -->
         <sqlite-jdbc.version>3.25.2</sqlite-jdbc.version>
