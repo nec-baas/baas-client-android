@@ -6,14 +6,15 @@ buildscript {
         maven {
             url "https://plugins.gradle.org/m2/" // for gradle-lombok plugin
         }
-        jcenter()
         google()
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.0'
+        //classpath 'com.android.tools.build:gradle:3.4.3'
+        classpath 'com.android.tools.build:gradle:8.1.2'
 
         // for firebase
-        classpath 'com.google.gms:google-services:4.0.1'
+        classpath 'com.google.gms:google-services:4.4.0'
 
         // gradle-lombok plugin
         classpath "io.franzbecker:gradle-lombok:2.2"
@@ -21,7 +22,11 @@ buildscript {
 }
 
 plugins {
+    id 'com.android.application' version '8.1.2' apply false
+    id 'com.android.library' version '8.1.2' apply false
+
     id 'java'
+
 
     // gradle-lombok plugin
     // 1.12-1.14は正常動作しないため、1.11 に固定
@@ -85,7 +90,6 @@ allprojects {
         }
         mavenLocal()
         maven { url 'https://maven.google.com' }
-        jcenter()
         google()
     }
 
