@@ -43,8 +43,8 @@ task sdkDir(dependsOn: [build, ':core:jar', ':android:jar', sourcesJar, javadocJ
 // ZIP アーカイブ作成
 task sdkZip(type: Zip) {
     from "sdk"
-    destinationDir = new File(".")
-    archiveName = "baas-client-android-v${version}.zip"
+    destinationDirectory = new File(".")
+    archiveFileName = "baas-client-android-v${version}.zip"
 }   
 
 //
