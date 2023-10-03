@@ -147,6 +147,8 @@ subprojects {
     }
 }
 
+/*
+
 def delombokOut = 'build/src_delombok'
 
 // Delombok: getter/setter の javadoc を生成するために使用
@@ -161,10 +163,12 @@ task delombok(type: DelombokTask) {
         args(it, "-d", outputDir)
     }
 }
+*/
 
 // javadoc (agggregate)
-task alljavadoc(type: Javadoc, dependsOn: [':core:assemble', ':android:assemble', delombok]) {
-    source = [delombokOut]
+task alljavadoc(type: Javadoc, dependsOn: [':core:assemble', ':android:assemble'/*, delombok*/]) {
+    //source = [delombokOut]
+    source = ['core/src/main/java', 'android/src/main/java']
     destinationDir = file("${buildDir}/java-android_reference")
     title = 'モバイルバックエンド基盤 Java / Android SDK リファレンス'
     failOnError = false
