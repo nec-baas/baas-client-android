@@ -84,15 +84,6 @@ allprojects {
     group = 'com.nec.baas'
     version = '7.5.1'
 
-    repositories {
-        if (hasProperty("additionalMavenUrl") && !additionalMavenUrl.isEmpty()) {
-            maven { url additionalMavenUrl }
-        }
-        mavenLocal()
-        maven { url 'https://maven.google.com' }
-        google()
-    }
-
     tasks.withType(JavaCompile) {
         it.options.encoding = 'UTF-8'
     }
