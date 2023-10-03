@@ -246,6 +246,8 @@ tasks.whenTaskAdded { task ->
 }
 
 // maven publish
+/* TODO:
 ext.name = "com.nec.baas:baas-client-android"
 apply plugin: 'com.github.dcendents.android-maven'
 apply from: '../maven-publish.gradle'
+*/

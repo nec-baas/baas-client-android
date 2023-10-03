@@ -37,7 +37,7 @@ plugins {
 
     // android library の maven publish を行なうための plugin
     // see: https://github.com/dcendents/android-maven-gradle-plugin
-    id 'com.github.dcendents.android-maven' version '2.1'
+    //id 'com.github.dcendents.android-maven' version '2.1' // TODO: does not work with gradle >=7
 }
 
 // 共通設定

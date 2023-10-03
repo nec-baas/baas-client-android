@@ -120,6 +120,8 @@ artifacts {
 }
 
 // maven publish
+/*
 ext.name = "com.nec.baas:baas-client-core"
 apply plugin: 'maven'
 apply from: '../maven-publish.gradle'
+*/
