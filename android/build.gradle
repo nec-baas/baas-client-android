@@ -11,6 +11,8 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
+    namespace = "com.nec.baas.baas_client_android"
+
     defaultConfig {
         testApplicationId "com.nec.baas.android.sdk.test"
         
