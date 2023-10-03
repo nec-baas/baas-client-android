@@ -179,7 +179,7 @@ task jar(type: Jar, dependsOn: assemble) {
 }
 
 jar {
-    baseName = archivesBaseName
+    archiveBaseName = archivesBaseName
 }
 
 // Javadoc jar 生成用タスク
@@ -195,14 +195,14 @@ task javadoc(type: Javadoc) {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    baseName = jar.baseName
-    classifier = 'javadoc'
+    archiveBaseName = jar.archiveBaseName
+    archiveClassifier = 'javadoc'
     from javadoc.destinationDir
 }
 
 task sourcesJar(type: Jar) {
-    baseName = jar.baseName
-    classifier = 'sources'
+    archiveBaseName = jar.archiveBaseName
+    archiveClassifier = 'sources'
     from "src/main"
 }
 

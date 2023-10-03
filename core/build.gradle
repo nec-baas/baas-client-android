@@ -69,7 +69,7 @@ task integrationTest(type: Test, dependsOn: compileTestJava) {
 }
 
 jar {
-    baseName = archivesBaseName
+    //baseName = archivesBaseName
 }
 
 javadoc {
@@ -83,21 +83,21 @@ javadoc {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    baseName = jar.baseName
-    classifier = 'javadoc'
+    archiveBaseName = jar.archiveBaseName
+    archiveClassifier = 'javadoc'
     from javadoc.destinationDir
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    baseName = jar.baseName
-    classifier = 'sources'
+    archiveBaseName = jar.archiveBaseName
+    archiveClassifier = 'sources'
     from sourceSets.main.allSource
 }
 
 // テスト用 Jar 生成
 task testJar(type: Jar, dependsOn: testClasses) {
-    classifier = 'test'
-    baseName = "baas-client-core"
+    archiveClassifier = 'test'
+    archiveBaseName = "baas-client-core"
     from sourceSets.test.output
 
     // テストクラスは除外
